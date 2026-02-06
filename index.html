@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Polar Bear Love Quest</title>
+  <!-- ✅ Polar Bear favicon -->
+  <link rel="icon" type="image/png" href="assets/1f43b-2744.png">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- MENU SCREEN -->
+  <section id="screen-menu" class="screen active">
+
+    <h1 class="title">
+    Polar Bear Love Quest
+    <span class="icon-pair">
+        <img src="assets/1f43b-2744.png" alt="Polar Bear" class="title-bear" />
+        <span class="title-heart">💙</span>
+    </span>
+    </h1>
+
+
+
+
+    <p>Enter your name to start your PookGirl Valentine adventure!</p>
+
+    <div class="card">
+      <label for="username">Your name</label>
+      <input
+        id="username"
+        type="text"
+        maxlength="20"
+        placeholder="e.g. PookGirl"
+      />
+        <button id="confirmUsernameBtn">Confirm username</button>
+        <p id="menuHint" class="hint"></p>
+    </div>
+
+
+    <div class="card center-card">
+    <h2>Mini Games</h2>
+    <div class="menu-buttons">
+        <button class="miniBtn" data-target="memory">
+        1) Memory Match (3 levels)
+        </button>
+        <button class="miniBtn" data-target="hearts">
+        2) Collect the Hearts
+        </button>
+    </div>
+    </div>
+
+
+  </section>
+
+  <!-- GAME 1: HEART COLLECT -->
+  <section id="screen-hearts" class="screen">
+    <div class="topbar">
+      <button class="backBtn">← Menu</button>
+      <div id="welcome"></div>
+    </div>
+
+    <h2>Help the Polar Bear Find Love</h2>
+    <p>Use the arrow keys to collect the hearts to buy a flower at the flowershop for this polar bear's pooks ❤️</p>
+
+    <div id="game">
+        <canvas id="heartsCanvas" width="720" height="420"></canvas>
+    </div>
+    <div id="message"></div>
+
+
+
+
+  </section>
+
+    <!-- MEMORY: LEVEL 1 -->
+    <section id="screen-memory-l1" class="screen">
+    <div class="topbar">
+        <button class="backBtn">← Menu</button>
+        <div id="welcomeMem"></div>
+    </div>
+
+    <h2>Memory Match — Beginner</h2>
+    <p>Hey Beautiful Perfect Princess! Find all pairs to advance!</p>
+
+    <div id="memoryBoardL1" class="memory-board"></div>
+    <div id="memoryMsgL1" class="memory-msg"></div>
+    </section>
+
+    <!-- MEMORY: LEVEL 2 -->
+    <section id="screen-memory-l2" class="screen">
+    <div class="topbar">
+        <button class="backBtn">← Menu</button>
+        <div id="welcomeMem2"></div>
+    </div>
+
+    <h2>Memory Match — Medium</h2>
+    <p>Yayyyyy!! You got this pooks let's gooo 🐾</p>
+
+    <div id="memoryBoardL2" class="memory-board"></div>
+    <div id="memoryMsgL2" class="memory-msg"></div>
+    </section>
+
+    <!-- MEMORY: LEVEL 3 -->
+    <section id="screen-memory-l3" class="screen">
+    <div class="topbar">
+        <button class="backBtn">← Menu</button>
+        <div id="welcomeMem3"></div>
+    </div>
+
+    <h2>Memory Match — Hard</h2>
+    <p>Hi pooks! This one’s harder, but you can do it, you always win, it's what you do eheheh ❄️</p>
+
+    <div id="memoryBoardL3" class="memory-board"></div>
+    <div id="memoryMsgL3" class="memory-msg"></div>
+    </section>
+
+    <!-- MEMORY: CONGRATS -->
+    <section id="screen-memory-win" class="screen">
+    <canvas id="confetti"></canvas>
+
+    <div class="win-card">
+        <h2 id="winTitle">Congratssss POKEEEEEEE!!!! 🎉</h2>
+        <p id="winText">You beat all 3 levels!</p>
+
+        <img
+        src="assets/gifs/polar-dance.gif"
+        alt="Dancing polar bear"
+        class="dance-gif"
+        />
+
+        <div class="funfact-card">
+        <h3>Unlock the secret polar bear fun fact</h3>
+        <p id="funfactText">Click to reveal…</p>
+
+        <button id="rerollFunFactBtn" class="funfact-reroll">
+            Re-roll fun fact
+        </button>
+
+        <p id="funfactEndMsg" class="hint"></p>
+        </div>
+
+
+        <button id="nextMiniGameBtn">Next fun PookGirl mini game →</button>
+        <button class="backBtn" style="margin-left:10px;">← Menu</button>
+    </div>
+    </section>
+    <!-- USERNAME CONFIRM MODAL -->
+    <div id="usernameModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card">
+        <h2 id="modalTitle">
+        You confirm choosing the username "Precious_Princess"
+        </h2>
+
+        <img
+        src="assets/gifs/confirm.gif"
+        alt="Celebration"
+        class="modal-gif"
+        />
+
+        <button id="letsGoooBtn">Let's gooo</button>
+    </div>
+    </div>
+
+    <!-- 💙 HEARTS GAME WIN POPUP -->
+    <div id="heartsWinModal" class="modal hidden">
+      <div class="win-popup-card">
+
+        <!-- Menu button -->
+        <button id="winMenuBtn" class="backBtn win-back-btn">← Menu</button>
+
+        <!-- Title -->
+        <h2 class="win-title">
+          HAPPY VALENTINE'S DAY!! I LOVE YOU SO SO VERYY MUCHH 💙💙💙
+        </h2>
+
+        <!-- Image -->
+        <img
+          src="assets/adorable-polar-bear-cub-with-crown-on-ice-arctic-wildlife-cute-animal-portrait-photo.jpg"
+          class="win-img"
+          alt="Polar Bear Love"
+        />
+
+        <!-- Message -->
+        <p class="win-text">
+          I hope you enjoyed these little wee polar bear games made just for my perfect beautiful princess ❤️,
+          since this time I couldn't get my valentine's gifts to you.
+          <br><br>
+          I Love you so so much and, everyday, I hope you feel as loved ❤️ as I want you to feel,
+          that means the world to me and is always my greatest priority.
+          <br><br>
+          I Love you now, and forever,<br>
+          Leo (your pooks) 💙💙💙
+        </p>
+
+      </div>
+    </div>
+
+  <!-- 🎵 GLOBAL MUSIC PLAYER -->
+  <div id="musicPlayer" class="hidden">
+    <button id="muteBtn" aria-label="Mute/unmute">🔊</button>
+    <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.99" />
+  </div>
+
+  <audio id="bgMusic" preload="auto"></audio>
+
+
+  <script defer src="music.js"></script>
+  <script defer src="hearts.js"></script>
+  <script src="game.js"></script>
+</body>
+
+</html>

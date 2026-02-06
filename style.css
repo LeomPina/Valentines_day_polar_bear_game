@@ -1,0 +1,561 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #eef7ff;
+  text-align: center;
+  margin: 0;
+  padding: 18px;
+}
+
+.screen {
+  display: none;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.screen.active {
+  display: block;
+}
+
+
+#screen-memory-l1,
+#screen-memory-l2,
+#screen-memory-l3 {
+  padding-bottom: 30px;
+}
+
+.card {
+  width: min(520px, 92vw);
+  margin: 16px auto;
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  text-align: left;
+}
+
+label { display: block; margin-bottom: 6px; font-weight: 700; }
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 2px solid #cfe9ff;
+  outline: none;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 12px;
+  background: #ff4d6d;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button:hover { filter: brightness(0.95); }
+
+.hint { color: #4b6a88; margin: 10px 0 0; }
+
+.menu-buttons {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.topbar {
+  width: min(700px, 94vw);
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.backBtn {
+  background: #3a7bd5;
+  margin-top: 0;
+}
+
+/* --- Game 1 styles (yours, slightly kept) --- */
+#game {
+  width: 700px;
+  height: 400px;
+  background: linear-gradient(#dff3ff, #b3e5ff);
+  margin: 20px auto;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 3px solid #a0d8ff;
+}
+
+#bear {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  left: 20px;
+  top: 170px;
+  box-shadow: inset -10px -10px 0 rgba(0,0,0,0.06);
+}
+
+.heart {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: absolute;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+#heartsCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+/* --- Game 2: Memory match --- */
+
+.card-tile {
+  height: 82px;
+  border-radius: 16px;
+  background: #cfe9ff;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  cursor: pointer;
+  user-select: none;
+  border: 2px solid #a0d8ff;
+}
+
+.card-tile.revealed {
+  background: #fff;
+}
+
+.memory-msg {
+  font-size: 18px;
+  color: #ff4d6d;
+  min-height: 24px;
+}
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.title-bear {
+  width: 1.5em;     /* make bigger/smaller here */
+  height: auto;
+  display: block;   /* helps alignment */
+}
+
+.title-heart {
+  font-size: 1.3em;
+  line-height: 1;
+  display: block;   /* prevents baseline weirdness */
+}
+
+/* Board can grow wide, but stays centered */
+/* Fixed-height board that expands sideways (no vertical scrolling) */
+.memory-board {
+  width: min(1400px, 96vw);
+  max-width: 95vw;
+
+  margin: 14px auto 20px;
+  padding: 12px 12px 10px;
+  box-sizing: border-box;
+
+  display: grid;
+  justify-content: center;
+  align-content: start;
+
+  overflow-x: auto;    /* ✅ allows horizontal scroll if needed */
+  overflow-y: visible; /* ✅ don’t clip flipped cards */
+}
+
+
+.memory-tile {
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  border: 2px solid #a0d8ff;
+  background: #cfe9ff;
+  overflow: hidden;
+  position: relative;
+}
+
+.memory-tile.matched {
+  border-color: #3a7bd5;
+  box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.18), 0 10px 20px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
+}
+
+.memory-tile:hover {
+  transform: translateY(-2px);
+}
+
+/* Front/back still work */
+.memory-tile .front,
+.memory-tile .back {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.memory-tile .front {
+  font-size: 28px;
+}
+
+.memory-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+.memory-tile.revealed .front { display: none; }
+.memory-tile:not(.revealed) .back { display: none; }
+
+/* ----- Win screen ----- */
+#screen-memory-win {
+  position: relative;
+  min-height: 80vh;
+}
+
+#confetti {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none !important; /* 👈 This is the most important line */
+  z-index: 1;
+}
+
+.win-card {
+  width: min(620px, 92vw);
+  margin: 30px auto;
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.dance-gif {
+  width: 180px;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+}
+
+.funfact-card {
+  margin: 14px auto;
+  padding: 18px;
+  border-radius: 16px;
+  border: 2px dashed #a0d8ff;
+  background: #f7fbff;
+  cursor: pointer;
+  text-align: center;          /* 👈 center everything */
+}
+
+.funfact-card h3 {
+  margin-top: 0;
+}
+
+.funfact-card p {
+  margin: 10px 0;
+}
+
+.funfact-reroll {
+  display: none;
+  margin-top: 10px;
+  background: #3a7bd5;
+}
+
+
+/* Disable mini game buttons until username confirmed */
+.miniBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.25);
+}
+
+/* Modal */
+.modal.hidden { display: none; }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+
+.modal-card {
+  width: min(520px, 92vw);
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.modal-gif {
+  width: 220px;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+}
+
+.center-card {
+  text-align: center;
+}
+
+
+/* SECOND GAME*/
+
+#game {
+  position: relative;
+
+  width: min(720px, 95vw);   /* ✅ responsive width */
+  aspect-ratio: 720 / 420;   /* ✅ keeps same shape */
+  height: auto;              /* ✅ let aspect-ratio control height */
+
+  margin: 16px auto;
+  overflow: hidden;          /* camera viewport */
+  border-radius: 18px;
+  border: 3px solid rgba(0,0,0,0.15);
+  background: #cfe9ff;
+}
+
+#world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 9999px; /* will be set by JS */
+  height: 9999px;
+  display: grid;
+}
+
+.tile {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+
+/* simple tundra palette (replace with real tile images later) */
+.tile.snow { background: #eaf6ff; }
+.tile.ice  { background: #c8ecff; }
+.tile.rock { background: #b7c3cf; }
+.tile.water{ background: #84c9ff; }
+
+/* player sprite placeholder */
+#bear {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -70%); /* sit on tile center */
+  background: radial-gradient(circle at 35% 35%, #fff, #d8e6ef);
+  border-radius: 12px;
+  box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+  z-index: 5;
+}
+
+/* objects */
+.obj {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+.obj.heart { filter: drop-shadow(0 4px 0 rgba(0,0,0,0.08)); }
+.obj.flower { font-size: 24px; }
+.obj.npc { font-size: 26px; }
+
+#message {
+  width: min(720px, 95vw);   /* ✅ match the game width */
+  margin: 10px auto 0;
+  min-height: 24px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.7);
+  box-sizing: border-box;
+}
+
+.win-popup-card {
+  background: white;
+  max-width: 520px;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0,0,0,0.3);
+  position: relative;
+  animation: popIn 0.4s ease;
+}
+
+.win-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2b8cff;
+  margin-bottom: 18px;
+}
+
+.win-img {
+  width: 100%;
+  border-radius: 18px;
+  margin: 15px 0;
+}
+
+.win-text {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.win-menu-btn:hover {
+  background: #1f6ed1;
+}
+
+.win-back-btn {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+}
+
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+
+/* container stays yours */
+#musicPlayer {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 6px 10px;
+  border-radius: 14px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  z-index: 9999;
+}
+
+#muteBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 0;
+  line-height: 1;
+  transform: translateY(-3px);
+}
+
+/* ===== MODERN RANGE SLIDER ===== */
+#volumeSlider {
+  width: 120px;
+  height: 32px;
+  margin: 0;
+
+  /* for our custom paint */
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+
+  /* these control the "filled" look via a CSS variable */
+  --track-h: 6px;
+  --thumb-sz: 16px;
+  --fill: 99%; /* will be overwritten by JS */
+}
+
+/* WebKit track (Chrome/Safari/Edge) */
+#volumeSlider::-webkit-slider-runnable-track {
+  height: var(--track-h);
+  border-radius: 999px;
+  background: linear-gradient(to right, #111 var(--fill), #d0d0d0 var(--fill));
+}
+
+/* WebKit thumb */
+#volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--thumb-sz);
+  height: var(--thumb-sz);
+  border-radius: 50%;
+  background: #111;
+  border: 2px solid #8ecbff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  margin-top: calc((var(--track-h) - var(--thumb-sz)) / 2);
+}
+
+/* Firefox track */
+#volumeSlider::-moz-range-track {
+  height: var(--track-h);
+  border-radius: 999px;
+  background: #d0d0d0;
+}
+
+/* Firefox filled portion */
+#volumeSlider::-moz-range-progress {
+  height: var(--track-h);
+  border-radius: 999px;
+  background: #111;
+}
+
+/* Firefox thumb */
+#volumeSlider::-moz-range-thumb {
+  width: var(--thumb-sz);
+  height: var(--thumb-sz);
+  border-radius: 50%;
+  background: #111;
+  border: 2px solid #8ecbff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+/* Focus outline */
+#volumeSlider:focus-visible {
+  outline: none;
+}
+
+#volumeSlider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.25);
+}
+#volumeSlider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.25);
+}
+
+
+
+.hidden { display: none !important; }
+
+
+
