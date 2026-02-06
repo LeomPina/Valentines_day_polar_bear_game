@@ -10,10 +10,10 @@
   }
 
   const tracks = [
-    "assets/music/Bentley.m4a",
-    "assets/music/Better_ultimate_pooks.m4a",
-    "assets/music/Pooks_to_sleep.m4a",
-    "assets/music/Safe.m4a",
+    "assets/music/1.m4a",
+    "assets/music/2.m4a",
+    "assets/music/3.m4a",
+    "assets/music/4.m4a",
   ];
 
   let currentTrack = 0;
