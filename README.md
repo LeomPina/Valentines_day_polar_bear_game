@@ -109,5 +109,4 @@ Tiles can also include:
 
 ## 📜 License
 
-This project is personal and made as a Valentine gift.  
-Feel free to fork for cute inspiration, but please don’t remove the love 💙
+This project is personal and made as a Valentine gift.
