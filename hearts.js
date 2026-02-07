@@ -77,6 +77,21 @@
   if (!canvas || !msgEl) return;
   const ctx = canvas.getContext("2d");
 
+  const loadingEl = document.getElementById("heartsLoading");
+
+  function showLoading(text = "Loading map… ❄️") {
+    if (!loadingEl) return;
+    const t = loadingEl.querySelector(".loading-text");
+    if (t) t.textContent = text;
+    loadingEl.classList.remove("hidden");
+  }
+
+  function hideLoading() {
+    if (!loadingEl) return;
+    loadingEl.classList.add("hidden");
+  }
+
+
   /* ===================== STATE ===================== */
   let shopArea = null;
   let npcArea = null; // optional if you want rectangle for npc too
@@ -911,9 +926,20 @@
   window.startHeartsGame = async () => {
     heartsCount = 0;
     hasFlower = false;
-    await loadAll();
-    setMessage("Collect hearts 💙 Buy a flower 🌸 Deliver it!");
-    startControls();
-    startRenderLoop();
+
+    showLoading("Loading map… ❄️");
+
+    try {
+      await loadAll();
+      setMessage("Collect hearts 💙 Buy a flower 🌸 Deliver it!");
+      startControls();
+      startRenderLoop();
+    } catch (err) {
+      console.error(err);
+      setMessage("Failed to load the map 😭 (check console)");
+    } finally {
+      hideLoading();
+    }
   };
+
 })();

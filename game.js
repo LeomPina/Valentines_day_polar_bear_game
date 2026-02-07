@@ -197,6 +197,22 @@ let memPairsFound = 0;
 let memPairsTotal = 0;
 let currentLevel = 1;
 
+function buildDeckFromPool(pool, pairs) {
+  const chosen = sampleNoDuplicates(pool, pairs);
+  return shuffle([...chosen, ...chosen]);
+}
+
+function isDeckValid(deck) {
+  const counts = new Map();
+  for (const k of deck) counts.set(k, (counts.get(k) || 0) + 1);
+
+  // every key must appear exactly twice
+  for (const [, c] of counts) {
+    if (c !== 2) return false;
+  }
+  return deck.length % 2 === 0;
+}
+
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -273,8 +289,18 @@ async function startMemoryLevel(level) {
 
   const pool = await loadImagePool();
 
-  const chosen = sampleNoDuplicates(pool, config.pairs);
-  const deck = shuffle([...chosen, ...chosen]);
+  let deck = [];
+  let tries = 0;
+
+  do {
+    deck = buildDeckFromPool(pool, config.pairs);
+    tries++;
+  } while (!isDeckValid(deck) && tries < 10);
+
+  if (!isDeckValid(deck)) {
+    throw new Error("Deck validation failed: could not generate perfect pairs.");
+  }
+
 
   msg.textContent = "";
 

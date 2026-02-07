@@ -188,12 +188,18 @@ button:hover { filter: brightness(0.95); }
 .memory-tile {
   width: 100%;
   height: 100%;
-  border-radius: 18px;
-  border: 2px solid #a0d8ff;
-  background: #cfe9ff;
-  overflow: hidden;
+
   position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+
+  border: 2px solid #a0d8ff;   /* ✅ put back */
+  background: #cfe9ff;         /* ✅ put back */
+
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
+
 
 .memory-tile.matched {
   border-color: #3a7bd5;
@@ -210,19 +216,34 @@ button:hover { filter: brightness(0.95); }
 .memory-tile .back {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
+
+  display: flex;               /* ✅ more consistent than grid on Safari here */
+  align-items: center;
+  justify-content: center;
+
+  border-radius: inherit;      /* ✅ prevents corner bleed */
+  overflow: hidden;            /* ✅ double safety */
+  backface-visibility: hidden; /* ✅ reduces weird paint artifacts */
+  -webkit-backface-visibility: hidden;
 }
 
 .memory-tile .front {
   font-size: 28px;
+  line-height: 1;              /* ✅ prevents “baseline trim” */
 }
 
-.memory-tile img {
+.memory-tile .back img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+
+  display: block;              /* ✅ ADD THIS */
+
+  border-radius: inherit;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 
@@ -551,6 +572,57 @@ button:hover { filter: brightness(0.95); }
 }
 #volumeSlider:focus-visible::-moz-range-thumb {
   box-shadow: 0 0 0 4px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.25);
+}
+
+
+/* Parent of the canvas must be relative so overlay can sit on top */
+#game {
+  position: relative; /* you already have this ✅ */
+}
+
+/* Overlay */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(207, 233, 255, 0.75);
+  backdrop-filter: blur(2px);
+  z-index: 50;
+}
+
+.loading-overlay.hidden {
+  display: none;
+}
+
+.loading-card {
+  background: rgba(255,255,255,0.9);
+  border: 2px solid #a0d8ff;
+  border-radius: 16px;
+  padding: 16px 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  display: grid;
+  gap: 10px;
+  place-items: center;
+}
+
+.loading-text {
+  color: #2b6aa8;
+  font-weight: 700;
+}
+
+/* Spinner */
+.spinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 5px solid rgba(58, 123, 213, 0.25);
+  border-top-color: rgba(58, 123, 213, 1);
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 
