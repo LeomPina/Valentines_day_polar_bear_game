@@ -17,4 +17,4 @@ fs.writeFileSync(
   "utf-8"
 );
 
-console.log(`✅ manifest.json created with ${files.length} images`);
+console.log(`manifest.json created with ${files.length} images`);
